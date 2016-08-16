@@ -1,3 +1,4 @@
+方法一：
 # -*- coding: UTF-8 -*-
 import time,datetime
 import os, win32gui, win32ui, win32con, win32api
@@ -27,3 +28,9 @@ def window_capture(dpath, srcbmp=[0, 0, None, None]):
 
 #调用截屏函数
 	window_capture('D:\\Tools\\', [50, 330, 400, 200])
+
+方法二
+from PIL import ImageGrab
+bbox = (0, 0, 300, 300)
+img = ImageGrab.grab(bbox)
+img.save("d:\\tools\\acdbacdb.png")
