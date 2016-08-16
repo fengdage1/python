@@ -1,0 +1,19 @@
+先下载cxfreeze安装
+然后
+1、下载cx_freeze
+这里是下载的地址http://www.lfd.uci.edu/~gohlke/pythonlibs/
+从该网页上找到cx_Freeze-4.3.4-cp34-none-win32.whl，点击下载
+2、修改下载文件的扩展名
+把扩展名whl，改为zip
+3、把该文件解压缩
+取出其中的3个子目录
+4、删除cx_freeze的旧包
+把Python 3.4 安装目录下，Lib\site-packages 里与 cx_Freeze 相关的子目录删除
+5、放置cx_freeze的新包
+在 Lib\site-packages 中，放置上述取出的3个子目录
+然后就可以打包了
+
+命令是cmd下
+cxfreeze d:\test.py --target-dir d:\dist   
+
+d:\dist则为目标文件夹
