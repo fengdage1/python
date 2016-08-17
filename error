@@ -1,0 +1,3 @@
+TypeError: KeyboardSwitch() missing 8 required positional arguments:
+根据http://stackoverflow.com/a/35401552/1535111，这是pyHook的一个bug，一个解决方案是安装“Python3 fork of pyHook”。但如果直接安装会出现ImportError: No module named 'cpyHook'的错误。根据http://stackoverflow.com/questions/31163844/python-import-error-on-compiled-binary，需要先将cpyHook*.pyd和cpyHook.py从..site-packages\pyHook目录拷贝到..site-packages，然后再编译安装。
+PS：还需要安装swig
