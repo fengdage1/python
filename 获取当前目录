@@ -1,5 +1,0 @@
-import time,os
-#获取当前脚本目录
-print(os.path.split(os.path.realpath(__file__))[0])
-#如果打包成程序,获取当前程序目录
-print(os.path.abspath(os.curdir))

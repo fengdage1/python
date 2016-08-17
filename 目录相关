@@ -1,0 +1,13 @@
+import time,os
+#获取当前脚本目录
+print(os.path.split(os.path.realpath(__file__))[0])
+#如果打包成程序,获取当前程序目录
+print(os.path.abspath(os.curdir))
+
+
+#查看目录是否存在，不存在则创建
+if os.path.exists('c:\\temp') == False:
+		os.makedirs('c:\\temp')
+		
+if os.path.isfile('c:\\temp\\1.jpg') == False:
+		#创建文件
