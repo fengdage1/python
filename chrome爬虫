@@ -1,0 +1,12 @@
+from selenium import webdriver
+import time,os
+from selenium.webdriver.common.keys import Keys
+chromedriver = "C:\Program Files\Google\Chrome\Application\chromedriver.exe"
+os.environ["webdriver.chrome.driver"] = chromedriver
+driver = webdriver.Chrome(chromedriver)
+driver.get("http://www.baidu.com")
+driver.get("http://toutiao.com/a6291869396272939522/")
+driver.get("http://toutiao.com/a6321210885114626306/")
+file = open(os.path.split(os.path.realpath(__file__))[0]+'\\output.html', 'wb')
+file.write(driver.page_source.encode())
+file.close();
