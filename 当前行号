@@ -1,0 +1,7 @@
+    def lineno(self):
+        frame = None
+        try:
+            raise ZeroDivisionError
+        except ZeroDivisionError:
+            frame = sys.exc_info()[2].tb_frame.f_back
+        return frame.f_lineno
