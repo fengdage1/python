@@ -1,0 +1,13 @@
+import re
+#findall就是所有匹配到的集合，数据量太大该方法不适合，应该用findone遍历
+html = html[0:npos]
+reg = '(?<=src=\")[^\<\>]+(?=\")'
+s = re.compile(reg)
+lst = s.findall(html)
+if len(lst) == 0:
+return ''
+
+#看是否找到，group()默认是group(0)
+m = re.match(reg, url)
+if m != None:
+return m.group()
