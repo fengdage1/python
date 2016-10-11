@@ -1,0 +1,18 @@
+    def command_run(self,command, timeout=10): #python控制shell执行时间，若超时则强行推出
+        pro = subprocess.Popen(command, shell=False)  #如果shell=true则在shell中执行，在windows下会有无法结束的情况
+        start = time.clock()
+        while 1:
+            ret = subprocess.Popen.poll(pro)
+            if ret == 0:
+                return True
+            elif ret is None:
+                d = time.clock() - start
+                if time.clock() - start > timeout:
+                    pro.terminate()
+                    pro.kill()
+                    break
+            else:
+                pro.terminate()
+                pro.kill()
+                break
+        return False
