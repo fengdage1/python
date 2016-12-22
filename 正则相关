@@ -3,6 +3,7 @@ import re
 html = html[0:npos]
 reg = '(?<=src=\")[^\<\>]+(?=\")'
 s = re.compile(reg)
+//s=re.compile(reg,re.S) //匹配所有字符，包括换行符，忽略换行符用此方法
 //取所有
 lst = s.findall(html) //lst是个list列表
 if len(lst) == 0:
