@@ -14,7 +14,14 @@ if r == None:
   return False
 item = r.group()
 
-#看是否找到，group()默认是group(0)
-m = re.match(reg, url)
+//正则遍历
+s = re.compile(IREG,re.S)
+for m in s.finditer(html):
+  print('%s , %s'%(m.group('title'),m.group('image')))
+
+
+
+//从头匹配字符串
+m = re.match(reg, url) 
 if m != None:
 return m.group()
