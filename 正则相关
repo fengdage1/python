@@ -25,3 +25,9 @@ for m in s.finditer(html):
 m = re.match(reg, url) 
 if m != None:
 return m.group()
+
+
+//匹配中文字符
+h = 'class ="pgc-img-caption" > < br > 搞笑君：这座山峰只有老司机才能开上去吧 < / p > < p > < img src="http://p3.pstatp.com/large/127c00063d92c40dff06"'
+    pattern = re.compile("([\u4e00-\u9fa5]+)")
+    results = pattern.findall(h)
