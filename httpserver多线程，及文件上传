@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 from oss import oss
 from PIL import Image
 from http.server import HTTPServer, BaseHTTPRequestHandler
+import cgi
 from socketserver import ThreadingMixIn
 import io, shutil,threading
 import configparser,os,json,re,time,inspect,sys,socket,pymysql,http.cookiejar,urllib.request,gzip,oss2,imghdr
@@ -101,7 +102,10 @@ class youtubeSpider(spider):
             video.download(local)
         except Exception as e:
             return False, '下载视频失败,line:' + str(self.lineno())
-#        self.oss.simepleUpload('video/' + remote, local)
+        return self.commitData(url, local,name,id, 'upload/video/' + remote,'video/' + remote,210)
+
+    def commitData(self,src,local,name,id,videoUrl,ossPath,category):
+        self.oss.simepleUpload(ossPath, local)
         if os.path.isfile(DIR + '\\out1.jpg') == True:
             try:
                 os.remove(DIR + '\\out1.jpg')
@@ -112,7 +116,7 @@ class youtubeSpider(spider):
         try:
             with self.conn.cursor() as cursor:
                 sql = 'insert into ak_video_items (source,title,alias,pv7,pv8,bigpicture,str2,category) values ("%s","%s","%s",%d,%d,"%s","%s",%d)' % (
-                    url, name, id, videoSize[0], videoSize[1], 'upload/video/' + remote, 'video/' + remote, 210)
+                    src, name, id, videoSize[0], videoSize[1], videoUrl, ossPath, 210)
                 count = cursor.execute(sql)
                 self.conn.commit()
         except Exception as e:
@@ -120,7 +124,6 @@ class youtubeSpider(spider):
             return False, '存储失败,line:' + str(self.lineno())
         finally:
             cursor.close()
-        print(name + ' 采集成功')
         return True,'采集成功'
 
     def getVideoList(self,user):
@@ -189,19 +192,7 @@ class youtubeSpider(spider):
             self.doData(self.getData())
 
 class MyHttpHandler(BaseHTTPRequestHandler):
-    def do_GET(self):
-        if '/script/getbyid.html' in self.path.lower():
-            file_object = open(DIR+'\\getbyid.html')
-            try:
-                r_str = file_object.read()
-            finally:
-                file_object.close()
-        elif '/script/getbyuser.html' in self.path:
-            file_object = open(DIR+'\\getbyid.html')
-            try:
-                r_str = file_object.read()
-            finally:
-                file_object.close()
+    def respone(self,r_str):
         enc = "UTF-8"
         encoded = ''.join(r_str).encode(enc)
         f = io.BytesIO()
@@ -213,31 +204,81 @@ class MyHttpHandler(BaseHTTPRequestHandler):
         self.end_headers()
         shutil.copyfileobj(f, self.wfile)
 
+    def do_GET(self):
+        if '/script/getbyid.html' in self.path.lower():
+            file_object = open(DIR+'\\getbyid.html')
+            try:
+                with open(DIR + '\\getbyid.html') as file_object:
+                    r_str = file_object.read()
+            except Exception as e:
+                    r_str = '打开html模板失败'
+        elif '/script/getbyuser.html' in self.path.lower():
+            file_object = open(DIR+'\\getbyid.html')
+            try:
+                r_str = file_object.read()
+            finally:
+                file_object.close()
+        elif '/script/upload.html' in self.path.lower():
+            try:
+                with open(DIR + '\\upload.html') as file_object:
+                    r_str = file_object.read()
+            except Exception as e:
+                r_str = '打开html模板失败'
+        return self.respone(r_str)
+
     def do_POST(self):
-        content = self.rfile.read(int(self.headers['content-length'])).decode()
-        if content.find('id=') == 0:
-            id = content[len('id='):]
+        if '/script/getbyid.html' in self.path.lower():
+            content = self.rfile.read(int(self.headers['content-length'])).decode()
+            if content.find('id=') == 0:
+                id = content[len('id='):]
+                flsp = youtubeSpider()
+                url = 'https://www.youtube.com/watch?v=' + id
+                re, msg = flsp.getVideoByUrl(url)
+                return self.respone('<html><script>alert("' + msg + '");window.location.href = "http://img.chzred.com:8080/script/getbyid.html";</script></html>')
+            elif content.find('user=') == 0:
+                user = content[len('user='):]
+                pass
+            else:
+                pass
+        elif '/script/upload.html' in self.path.lower():
+            form = cgi.FieldStorage(
+                fp=self.rfile,
+                headers=self.headers,
+                environ={'REQUEST_METHOD': 'POST',
+                         'CONTENT_TYPE': self.headers['Content-Type'],
+                         }
+            )
+            file = form['file']
+            if file.filename == '':
+                msg = '请选择需要上传的mp4视频'
+                return self.respone(
+                    '<html><script>alert("' + msg + '");window.location.href = "http://img.chzred.com:8080/script/upload.html";</script></html>')
+            if file.type != 'video/mp4':
+                msg = '必须是mp4格式的视频'
+                return self.respone(
+                    '<html><script>alert("' + msg + '");window.location.href = "http://img.chzred.com:8080/script/upload.html";</script></html>')
+            t = time.time()
+            id = int(t*1000000)
+            remote = str(id) + '.mp4'
+            local = 'd:\\flsp\\upload\\video\\' + remote
+            videoname = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(t))
+            try:
+                with open(local,'wb') as f:
+                    f.write(file.value)
+            except Exception as e:
+                msg = '写入文件失败'
+                return self.respone('<html><script>alert("' + msg + '");window.location.href = "http://img.chzred.com:8080/script/upload.html";</script></html>')
             flsp = youtubeSpider()
-            url = 'https://www.youtube.com/watch?v=' + id
-            re, msg = flsp.getVideoByUrl(url)
-            enc = "UTF-8"
-            encoded = ''.join(
-                '<html><script>alert("' + msg + '");window.location.href = "http://img.chzred.com:8080/script/getbyid.html";</script></html>').encode(
-                enc)
-            f = io.BytesIO()
-            f.write(encoded)
-            f.seek(0)
-            self.send_response(200)
-            self.send_header("Content-type", "text/html; charset=%s" % enc)
-            self.send_header("Content-Length", str(len(encoded)))
-            self.end_headers()
-            shutil.copyfileobj(f, self.wfile)
-        elif content.find('user=') == 0:
-            user = content[len('user='):]
-            pass
-        else:
-            pass
-        pass
+            re,msg=flsp.commitData('',local,videoname,id,'upload/video/' + remote,'video/' + remote, 210)
+            if re == True:
+                msg='上传成功'
+            else:
+                msg='上传失败'
+            return self.respone(
+                '<html><script>alert("' + msg + '");window.location.href = "http://img.chzred.com:8080/script/upload.html";</script></html>')
+
+
+
 
 class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
     """Handle requests in a separate thread."""
