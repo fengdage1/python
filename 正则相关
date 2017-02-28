@@ -15,7 +15,7 @@ if r == None:
 item = r.group()
 
 //正则遍历
-s = re.compile('(?<=\<img src\=\")(?P<image>+*?)(?=\")+*?(?<=\<p\>\↑\↑\↑)(?P<title>+*?)(?=\<\/p\>)',re.S)
+s = re.compile('(?<=\<img src\=\")(?P<image>.+?)(?=\")+*?(?<=\<p\>\↑\↑\↑)(?P<title>.+?)(?=\<\/p\>)',re.S)
 for m in s.finditer(html):
   print('%s , %s'%(m.group('title'),m.group('image')))
 
