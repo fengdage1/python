@@ -11,3 +11,7 @@ if os.path.exists('c:\\temp') == False:
 		
 if os.path.isfile('c:\\temp\\1.jpg') == False:
 		#创建文件
+
+#遍历目录
+for root, dirs, files in os.walk(dir, topdown=True):  #root被遍历目录 dirs被遍历目录下的目录集合 files被遍历目录下的文件集合
+    pass
