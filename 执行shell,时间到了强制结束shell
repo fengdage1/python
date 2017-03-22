@@ -1,32 +1,30 @@
-def shell( commandArray, timeout=60):  # python控制shell执行时间，若超时则强行推出
-    pro = subprocess.Popen(commandArray, shell=False,stdout=subprocess.PIPE)
+def shell( commandArray, timeout=60):  # python控制shell执行时间，若超时则强行推出,时间单位为秒
+    pro = subprocess.Popen(commandArray, shell=False,stdout=subprocess.PIPE,close_fds=True)
     start = time.clock()
+    out = ''
+    re = False
     while 1:
-        ret = subprocess.Popen.poll(pro)
+        ret = pro.poll()
         if ret == 0:  # shell执行完成
-            try:
-                pro.terminate()
-                pro.kill()
-            finally:
-                return True,pro.stdout.read()
+            re = True
+            out = pro.stdout.read()
+            break
         elif ret is None:  # shell还在执行中
             if time.clock() - start > timeout:
-                try:
-                    pro.terminate()
-                    pro.kill()
-                finally:
-                    break
-        else:  # 意外情况
-            try:
-                pro.terminate()
-                pro.kill()
-            finally:
                 break
+        else:  # 意外情况
+            break
     try:
+        if pro.stdin:
+            pro.stdin.close()
+        if pro.stdout:
+            pro.stdout.close()
+        if pro.stderr:
+            pro.stderr.close()
         pro.terminate()
         pro.kill()
     finally:
-        return False
+        return re,out
         
         
 
