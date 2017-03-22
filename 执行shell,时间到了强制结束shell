@@ -7,7 +7,7 @@ def shell( commandArray, timeout=60):  # python控制shell执行时间，若超�
         ret = pro.poll()
         if ret == 0:  # shell执行完成
             re = True
-            out = pro.stdout.read()
+            out = pro.stdout.readlines() //返回输出结果的列表
             break
         elif ret is None:  # shell还在执行中
             if time.clock() - start > timeout:
