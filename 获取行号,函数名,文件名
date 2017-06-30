@@ -1,0 +1,14 @@
+sys._getframe().f_back.f_code.co_name #获取调用函数名
+sys._getframe().f_back.f_lineno     #获取调用处行号
+sys._getframe().f_back.f_code.co_filename #获取调用处文件名
+sys._getframe().f_code.co_name  #获取当前函数名
+__file__ #当前文件名
+
+#当前行号
+    def lineno(self):
+        frame = None
+        try:
+            raise ZeroDivisionError
+        except ZeroDivisionError:
+            frame = sys.exc_info()[2].tb_frame.f_back
+        return frame.f_lineno
