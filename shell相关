@@ -1,3 +1,4 @@
+执行shell,时间到了退出shell
 def shell( commandArray, timeout=60):  # python控制shell执行时间，若超时则强行推出,时间单位为秒
     pro = subprocess.Popen(commandArray, shell=False,stdout=subprocess.PIPE,close_fds=True)
     start = time.clock()
@@ -32,3 +33,8 @@ def shell( commandArray, timeout=60):  # python控制shell执行时间，若超�
 
 //非阻塞方式直接执行shell
 subprocess.Popen(commandArray, shell=False)
+try:
+    os.kill(pid, 9) //结束该shell ,用其他方式容易产生子僵尸进程
+    os.waitpid(pid, 0)
+except Exception as e:
+    pass
