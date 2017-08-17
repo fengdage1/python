@@ -1,0 +1,17 @@
+import  multiprocessing
+
+def downloadArticle(self,node,q,lock):
+    #lock.acquire()#加锁
+    #url = q.get() #队列中取出一个数据，用于进程通信
+    html=download(node.getLink())
+    #lock.release()#解锁
+
+q = multiprocessing.Manager().Queue()
+q.put(self.errDocs)
+lock = multiprocessing.Manager().Lock()
+pool = multiprocessing.Pool(20) #进程池容量最大20个进程
+for node in nodes:
+    pool.apply_async(self.downloadArticle, (node,q,lock))
+pool.close()
+pool.join()  # 进程池中进程执行完毕后再关闭，如果注释，那么程序直接关闭。
+pool.terminate()
