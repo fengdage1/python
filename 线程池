@@ -1,0 +1,12 @@
+import threading
+from concurrent.futures import ProcessPoolExecutor,ThreadPoolExecutor, wait, as_completed
+
+def test(key)
+   print('threading')
+
+pool = ThreadPoolExecutor(100)
+        futures = []
+        for key, value in self.httpProxies.items():
+            futures.append(pool.submit(test,key))
+        wait(futures)
+     
