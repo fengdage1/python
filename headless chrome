@@ -1,0 +1,14 @@
+1.chrome版本59以上，ubuntu下路径一般为 /opt/google/chrome/chrome
+2.安装最新selenium， pip3 install --upgrade selenium
+3.下载最新chrome webdriver https://sites.google.com/a/chromium.org/chromedriver/
+
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+chrome_options = Options()
+    chrome_options.add_argument('--headless')
+    chrome_options.add_argument('--disable-gpu')
+    chrome_options.binary_location = '/opt/google/chrome/chrome'
+    driver = webdriver.Chrome(executable_path='/opt/google/chrome/chromedriver',chrome_options=chrome_options)
+    url = "http://www.qq.com/"
+    driver.get(url)
+    h=driver.page_source
