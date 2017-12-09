@@ -8,6 +8,7 @@ chrome_options = Options()
     chrome_options.add_argument('--headless')
     chrome_options.add_argument('--disable-gpu')
     #chrome_options.add_argument('--no-sandbox') //可视环境有可能root用户需要该选项
+    chrome_options.add_experimental_option("prefs", {"profile.managed_default_content_settings.images": 2})#不加载图片
     chrome_options.binary_location = '/opt/google/chrome/chrome'
     driver = webdriver.Chrome(executable_path='/opt/google/chrome/chromedriver',chrome_options=chrome_options)
     url = "http://www.qq.com/"
