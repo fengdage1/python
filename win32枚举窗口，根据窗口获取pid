@@ -1,0 +1,19 @@
+import os,win32api,win32con,win32gui,win32process
+def _MyCallback( hwnd, extra ):
+    windows = extra
+    temp=[]
+    temp.append(hwnd)
+    temp.append(win32gui.GetClassName(hwnd))
+    temp.append(win32gui.GetWindowText(hwnd))
+    windows[hwnd] = temp
+if __name__ == "__main__":
+    windows = {}
+    win32gui.EnumWindows(_MyCallback, windows)
+    for window in windows.items():
+        if window[1][1] == 'MozillaWindowClass':
+            v=1
+            if window[1][2] != '':
+                _,pid = win32process.GetWindowThreadProcessId (window[1][0])
+                # if pid == xxx
+                win32api.PostMessage(window[1][0], win32con.WM_CLOSE, 0, 0)
+            pass
