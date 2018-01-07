@@ -4,6 +4,9 @@ tor --hash-password password
 编辑/etc/tor/torrc：
 把注释中的ControlPort 9051取消注释，
 把注释中的HashedControlPassword取消注释，后面的密码改成由上一步生成的密码
+在文件中加入，代表只取这些国家的ip
+StrictNodes 1
+ExitNodes {jp},{us},{cn}
 重启tor：
 /etc/init.d/tor 
 
