@@ -6,11 +6,8 @@ tor --hash-password password
 把注释中的HashedControlPassword取消注释，后面的密码改成由上一步生成的密码
 重启tor：
 /etc/init.d/tor 
-git clone git://github.com/aaronsw/pytorctl.git
-python3 setup.py build
-python3 setup.py install
 
-以下是代码
+以下是测试代码
 import socks //pip3 install PySocks
 import socket
 if __name__ == '__main__':
