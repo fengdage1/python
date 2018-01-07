@@ -1,0 +1,24 @@
+apt-get install tor
+/etc/init.d/tor restart
+tor --hash-password password
+编辑/etc/tor/torrc：
+把注释中的ControlPort 9051取消注释，
+把注释中的HashedControlPassword取消注释，后面的密码改成由上一步生成的密码
+重启tor：
+/etc/init.d/tor 
+git clone git://github.com/aaronsw/pytorctl.git
+python3 setup.py build
+python3 setup.py install
+
+以下是代码
+import socks //pip3 install PySocks
+import socket
+if __name__ == '__main__':
+    socks.set_default_proxy(socks.SOCKS5, "localhost", 9050)
+    socket.socket = socks.socksocket
+    for i in range(0,100):
+        html = net.get('http://api.ipify.org')
+        v='(echo authenticate \\"333221abc\\"; echo signal newnym; echo quit) | nc localhost 9051'
+        os.system(v)#切换ip
+        print(html)
+    
